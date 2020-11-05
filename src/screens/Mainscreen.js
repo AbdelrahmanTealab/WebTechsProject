@@ -12,9 +12,28 @@ export default class Mainscreen extends React.Component {
         }
     }
 
-    //function to call when log out is pressed, for future implementation
+    //functions to call when buttons are pressed, for future implementation
     logOut() {
         console.log('Log Out pressed!');
+    }
+
+    addPatientRecord() {
+        console.log('Add Patient Record!');
+    }
+    addPatient() {
+        console.log('Add Patient!');
+    }
+    refreshData() {
+        console.log('Refresh Data!');
+    }
+    searchPatient() {
+        console.log('Search Patient!');
+    }
+    filterData() {
+        console.log('Filter Data!');
+    }
+    viewPatientRecord() {
+        console.log('View Patient Record!');
     }
 
     render() {
@@ -57,7 +76,7 @@ export default class Mainscreen extends React.Component {
                         <View>
                             {/* table headers */}
                             <Table borderStyle={{ borderWidth: 1, borderColor: '#B0A1C8' }}>
-                                <Row data={state.dataHeaders} widthArr={state.headerWidth} style={styles.tableheader} textStyle={styles.headertext}/>
+                                <Row data={state.dataHeaders} widthArr={state.headerWidth} style={styles.tableheader} textStyle={styles.headertext} />
                             </Table>
                             <ScrollView style={styles.dataWrapper}>
                                 {/* table data */}
@@ -65,13 +84,42 @@ export default class Mainscreen extends React.Component {
                                     {
                                         patientsTable.map((patientRow, index) => (
                                             //mapping the 2d array into the table
-                                            <Row key={index} data={patientRow} widthArr={state.headerWidth} style={[styles.rowstyle]} textStyle={styles.tabletext}/>
+                                            <Row key={index} data={patientRow} widthArr={state.headerWidth} style={[styles.rowstyle]} textStyle={styles.tabletext} />
                                         ))
                                     }
                                 </Table>
                             </ScrollView>
                         </View>
                     </ScrollView>
+                </View>
+                {/* Buttons view */}
+                <View style={styles.buttonsview}>
+                    <View style={styles.button}>
+                        <Text onPress={this.addPatientRecord} style={styles.buttontext}>Add Patient Record</Text>
+                    </View>
+
+                    <View style={styles.buttonsviewsmall}>
+                        <View style={styles.buttonsmall}>
+                            <Text onPress={this.addPatient} style={styles.buttontext}>Add Patient</Text>
+                        </View>
+                        <View style={styles.buttonsmall}>
+                            <Text onPress={this.refreshData} style={styles.buttontext}>Refresh Data</Text>
+                        </View>
+                    </View>
+
+                    <View style={styles.buttonsviewsmall}>
+                        <View style={styles.buttonsmall}>
+                            <Text onPress={this.searchPatient}style={styles.buttontext}>Search Patient</Text>
+                        </View>
+                        <View style={styles.buttonsmall}>
+                            <Text onPress={this.filterData} style={styles.buttontext}>Filter Data</Text>
+                        </View>
+                    </View>
+
+                    <View style={styles.button}>
+                        <Text onPress={this.viewPatientRecord} style={styles.buttontext}>View Patient Record</Text>
+                    </View>
+
                 </View>
             </View>
 
@@ -116,8 +164,8 @@ const styles = StyleSheet.create({
     tableView: {
         flex: 0,
         padding: 2,
-        marginStart:15,
-        marginEnd:15,
+        marginStart: 15,
+        marginEnd: 15,
         height: "50%",
         borderWidth: 2,
         backgroundColor: "#84E0F0"
@@ -143,6 +191,49 @@ const styles = StyleSheet.create({
     rowstyle: {
         height: 40,
         backgroundColor: '#E6EDF2'
-    }
-
+    },
+    button: {
+        marginHorizontal: 30,
+        alignItems: "center",
+        marginTop: '2%',
+        backgroundColor: "#144CA7",
+        paddingVertical: 15,
+        borderRadius: 10,
+        marginBottom: '2%',
+    },
+    buttonsmall: {
+        width: '35%',
+        alignItems: "center",
+        backgroundColor: "#144CA7",
+        paddingVertical: 15,
+        borderRadius: 10,
+        marginLeft: 'auto',
+        marginRight: 'auto'
+    },
+    buttontext: {
+        color: "white",
+        fontFamily: 'AppleSDGothicNeo-Bold',
+        fontSize: 18,
+    },
+    buttonsview: {
+        margin: 'auto',
+        alignSelf: 'center',
+        width: "92.5%",
+        flexDirection: 'column',
+        fontFamily: 'AppleSDGothicNeo-Bold',
+        fontSize: 28,
+    },
+    buttonsviewsmall: {
+        alignSelf: 'center',
+        alignContent: 'center',
+        alignItems: 'center',
+        margin: 'auto',
+        marginTop: '2%',
+        marginBottom: '2%',
+        width: "110%",
+        display: "flex",
+        flexDirection: 'row',
+        fontFamily: 'AppleSDGothicNeo-Bold',
+        fontSize: 28,
+    },
 });
