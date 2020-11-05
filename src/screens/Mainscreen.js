@@ -1,25 +1,80 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Platform, Keyboard, StatusBar } from 'react-native';
-
+import { StyleSheet, Text, View, Image, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Platform, Keyboard, StatusBar, ScrollView } from 'react-native';
+import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 
 export default class Mainscreen extends React.Component {
+    //identifying table headers and their widths
+    constructor(props) {
+        super(props);
+        this.state = {
+            dataHeaders: ['Patient', 'Age', 'Datetime', 'Blood Pressure', 'Respiratory Rate', 'Blood Oxygen Level', 'Heartbeat rate'],
+            headerWidth: [160, 50, 100, 110, 130, 140, 110]
+        }
+    }
 
+    //function to call when log out is pressed, for future implementation
     logOut() {
         console.log('Log Out pressed!');
     }
 
     render() {
+        const state = this.state;
+        /* using dummy data for now */
+        const patientsTable = [];
+        for (let i = 0; i < 30; i += 1) {
+            const patientRow = [];
+            patientRow.push(`patient${i}`);
+            patientRow.push(`${(i + 10) * 2}`);
+            patientRow.push(`${i + 1}/03/2020`);
+            patientRow.push(`${i * 15}`);
+            patientRow.push(`${i * 18}`);
+            patientRow.push(`${i * 17}`);
+            patientRow.push(`${i * 14}`);
+            patientsTable.push(patientRow);
+        }
         const { navigate } = this.props.navigation
         return (
-            <KeyboardAvoidingView
-                behavior={Platform.OS == "ios" ? "padding" : "height"}>
-                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                    <View>
-                    <StatusBar barStyle="dark-content"/>
-                        <Text style={styles.logo} onPress={this.logOut}>Log Out</Text>
+            <View>
+                <StatusBar barStyle="dark-content" />
+                <Text style={styles.logout} onPress={this.logOut}>Log Out</Text>
+
+                {/* user details section */}
+
+                <View style={styles.userinfo}>
+                    <Image source={require('../images/avatar.png')} style={styles.avatar} />
+
+                    <View style={styles.userdetails}>
+                        <Text style={styles.userdetailstext}>Dr. John Doe</Text>
+                        <Text style={styles.userdetailstext}>Occupational Therapist</Text>
                     </View>
-                </TouchableWithoutFeedback>
-            </KeyboardAvoidingView>
+                    <Image source={require('../images/logo.png')} style={styles.logo} />
+                </View>
+
+                {/* table section */}
+
+                <View style={styles.tableView}>
+                    <ScrollView horizontal={true}>
+                        <View>
+                            {/* table headers */}
+                            <Table borderStyle={{ borderWidth: 1, borderColor: '#B0A1C8' }}>
+                                <Row data={state.dataHeaders} widthArr={state.headerWidth} style={styles.tableheader} textStyle={styles.headertext}/>
+                            </Table>
+                            <ScrollView style={styles.dataWrapper}>
+                                {/* table data */}
+                                <Table borderStyle={{ borderWidth: 1, borderColor: '#B0A1C8' }}>
+                                    {
+                                        patientsTable.map((patientRow, index) => (
+                                            //mapping the 2d array into the table
+                                            <Row key={index} data={patientRow} widthArr={state.headerWidth} style={[styles.rowstyle]} textStyle={styles.tabletext}/>
+                                        ))
+                                    }
+                                </Table>
+                            </ScrollView>
+                        </View>
+                    </ScrollView>
+                </View>
+            </View>
+
         )
     }
 }
@@ -30,54 +85,64 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    logo: {
-        alignItems: 'center',
-        alignSelf: 'center',
-        marginTop: "20%",
-        height: "30%",
-        width: "50%",
-        marginBottom: "1%"
-
+    logout: {
+        marginTop: "10%",
+        marginStart: "5%",
+        marginBottom: "1%",
+        color: '#144CA7'
     },
-    title: {
-        alignItems: 'center',
+    userinfo: {
         alignSelf: 'center',
+        width: "90%",
+        flexDirection: 'row',
+        borderWidth: 1,
         fontFamily: 'AppleSDGothicNeo-Bold',
         fontSize: 28,
-        marginBottom: "2%"
+        marginBottom: "2%",
     },
-    subtitle: {
-        alignItems: 'center',
-        alignSelf: 'center',
-        fontFamily: 'Apple SD Gothic Neo',
-        fontSize: 18,
+    avatar: {
+        height: 100,
+        width: 100,
     },
-    button: {
-        marginHorizontal: 55,
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: 20,
-        backgroundColor: "#144CA7",
-        paddingVertical: 15,
-        borderRadius: 23,
-        marginBottom: 20,
+    userdetails: {
+        flexDirection: 'column',
     },
-    buttontext: {
-        color: "white",
-        fontFamily: 'AppleSDGothicNeo-Bold',
-        fontSize: 18,
+    logo: {
+        height: 100,
+        width: 100,
+        borderWidth: 1,
+        marginLeft: 'auto'
     },
-    formfield: {
-        alignItems: "center",
-        flexDirection: "row",
-        marginHorizontal: 60,
+    tableView: {
+        flex: 0,
+        padding: 2,
+        marginStart:15,
+        marginEnd:15,
+        height: "50%",
         borderWidth: 2,
-        paddingHorizontal: 10,
-        marginTop: 20,
-        borderColor: "#144CA7",
-        borderRadius: 15,
-        paddingVertical: 8,
+        backgroundColor: "#84E0F0"
+    },
+    tableheader: {
+        height: 50,
+        backgroundColor: '#144CA7'
+    },
+    tabletext: {
+        textAlign: 'center',
+        fontWeight: '100',
         fontFamily: 'Apple SD Gothic Neo',
-        fontSize: 18,
+    },
+    headertext: {
+        textAlign: 'center',
+        fontWeight: 'bold',
+        color: '#D5DFE9',
+        fontFamily: 'AppleSDGothicNeo-Bold',
+    },
+    dataWrapper: {
+        marginTop: -1
+    },
+    rowstyle: {
+        height: 40,
+        backgroundColor: '#E6EDF2'
     }
+
 });
