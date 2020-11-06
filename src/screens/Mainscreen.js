@@ -8,7 +8,7 @@ export default class Mainscreen extends React.Component {
         super(props);
         this.state = {
             dataHeaders: ['Patient', 'Age', 'Datetime', 'Blood Pressure', 'Respiratory Rate', 'Blood Oxygen Level', 'Heartbeat rate'],
-            headerWidth: [160, 50, 100, 110, 130, 140, 110]
+            headerWidth: [160, 50, 200, 110, 130, 140, 110]
         }
     }
 
@@ -25,6 +25,13 @@ export default class Mainscreen extends React.Component {
     }
     refreshData() {
         console.log('Refresh Data!');
+        const promise = fetch('http://localhost:3009/patients');
+        promise.then(response => response.json()).then((responseJson)=> {
+            console.log(responseJson);
+
+          }).catch(error=>console.log(error)) //to catch the errors if any
+
+          
     }
     searchPatient() {
         console.log('Search Patient!');
@@ -109,7 +116,7 @@ export default class Mainscreen extends React.Component {
 
                     <View style={styles.buttonsviewsmall}>
                         <View style={styles.buttonsmall}>
-                            <Text onPress={this.searchPatient}style={styles.buttontext}>Search Patient</Text>
+                            <Text onPress={this.searchPatient} style={styles.buttontext}>Search Patient</Text>
                         </View>
                         <View style={styles.buttonsmall}>
                             <Text onPress={this.filterData} style={styles.buttontext}>Filter Data</Text>
@@ -117,7 +124,7 @@ export default class Mainscreen extends React.Component {
                     </View>
 
                     <View style={styles.button}>
-                        <Text onPress={this.viewPatientRecord} style={styles.buttontext}>View Patient Record</Text>
+                        <Text onPress={this.logOut} style={styles.buttontext}>View Patient Record</Text>
                     </View>
 
                 </View>
