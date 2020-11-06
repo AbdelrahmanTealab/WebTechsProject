@@ -21,17 +21,34 @@ export default class Mainscreen extends React.Component {
         console.log('Add Patient Record!');
     }
     addPatient() {
+        var date = new Date()
         console.log('Add Patient!');
+        fetch('http://localhost:3009/patients', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                ID: 104,
+                Name: 'ReactNative Test',
+                Age: 36,
+                Datetime: date,
+                BloodPressure: '3234',
+                RespiratoryRate: '43',
+                BloodOxygen: '13',
+                HeartBeat: '543'
+            }),
+        });
+
     }
     refreshData() {
         console.log('Refresh Data!');
         const promise = fetch('http://localhost:3009/patients');
-        promise.then(response => response.json()).then((responseJson)=> {
+        promise.then(response => response.json()).then((responseJson) => {
             console.log(responseJson);
-
-          }).catch(error=>console.log(error)) //to catch the errors if any
-
-          
+            return responseJson
+        }).catch(error => console.log(error))
     }
     searchPatient() {
         console.log('Search Patient!');
