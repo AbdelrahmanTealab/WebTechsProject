@@ -7,8 +7,10 @@ export default class Mainscreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            dataHeaders: ['Patient', 'Age', 'Datetime', 'Blood Pressure', 'Respiratory Rate', 'Blood Oxygen Level', 'Heartbeat rate'],
-            headerWidth: [160, 50, 200, 110, 130, 140, 110]
+            dataHeaders: ['ID','Patient', 'Age', 'Datetime', 'Blood Pressure', 'Respiratory Rate', 'Blood Oxygen Level', 'Heartbeat rate'],
+            headerWidth: [50,160, 50, 180, 110, 130, 140, 110],
+            data: [],
+            isLoading: true
         }
     }
 
@@ -30,23 +32,34 @@ export default class Mainscreen extends React.Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                ID: 104,
-                Name: 'ReactNative Test',
-                Age: 36,
+                ID: "104",
+                Name: 'Mr. Pawluk',
+                Age: "38",
                 Datetime: date,
-                BloodPressure: '3234',
-                RespiratoryRate: '43',
-                BloodOxygen: '13',
-                HeartBeat: '543'
+                BloodPressure: '135',
+                RespiratoryRate: '543',
+                BloodOxygen: '234',
+                HeartBeat: '654'
             }),
         });
 
     }
+    componentDidMount() {
+        fetch('http://localhost:3009/patients')
+          .then((response) => response.json())
+          .then((json) => {
+            this.setState({ data: json });
+          })
+          .catch((error) => console.error(error))
+          .finally(() => {
+            this.setState({ isLoading: false });
+          });
+      }
     refreshData() {
         console.log('Refresh Data!');
         const promise = fetch('http://localhost:3009/patients');
         promise.then(response => response.json()).then((responseJson) => {
-            console.log(responseJson);
+            console.log(responseJson[0]);
             return responseJson
         }).catch(error => console.log(error))
     }
@@ -62,17 +75,20 @@ export default class Mainscreen extends React.Component {
 
     render() {
         const state = this.state;
-        /* using dummy data for now */
+        const { data, isLoading } = this.state;
+
+                /* using dummy data for now */
         const patientsTable = [];
-        for (let i = 0; i < 30; i += 1) {
+        for (let i = 0; i < data.length; i += 1) {
             const patientRow = [];
-            patientRow.push(`patient${i}`);
-            patientRow.push(`${(i + 10) * 2}`);
-            patientRow.push(`${i + 1}/03/2020`);
-            patientRow.push(`${i * 15}`);
-            patientRow.push(`${i * 18}`);
-            patientRow.push(`${i * 17}`);
-            patientRow.push(`${i * 14}`);
+            patientRow.push(data[i].ID);
+            patientRow.push(data[i].Name);
+            patientRow.push(data[i].Age);
+            patientRow.push(data[i].Datetime);
+            patientRow.push(data[i].BloodPressure);
+            patientRow.push(data[i].RespiratoryRate);
+            patientRow.push(data[i].BloodOxygen);
+            patientRow.push(data[i].HeartBeat);
             patientsTable.push(patientRow);
         }
         const { navigate } = this.props.navigation
