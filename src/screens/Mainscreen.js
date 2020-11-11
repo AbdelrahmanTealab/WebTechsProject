@@ -1,20 +1,26 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Platform, Keyboard, StatusBar, ScrollView } from 'react-native';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
-
+import { Alert, Modal, TouchableHighlight } from "react-native";
 export default class Mainscreen extends React.Component {
-    //identifying table headers and their widths
+    state = {
+        modalVisible: false
+    };
     constructor(props) {
         super(props);
         this.state = {
-            dataHeaders: ['ID','Patient', 'Age', 'Datetime', 'Blood Pressure', 'Respiratory Rate', 'Blood Oxygen Level', 'Heartbeat rate'],
-            headerWidth: [50,160, 50, 180, 110, 130, 140, 110],
+            dataHeaders: ['ID', 'Patient', 'Age', 'Datetime', 'Blood Pressure', 'Respiratory Rate', 'Blood Oxygen Level', 'Heartbeat rate'],
+            headerWidth: [50, 160, 50, 180, 110, 130, 140, 110],
             data: [],
             isLoading: true
         }
     }
 
     //functions to call when buttons are pressed, for future implementation
+    setModalVisible = (visible) => {
+        this.setState({ modalVisible: visible });
+    }
+
     logOut() {
         console.log('Log Out pressed!');
     }
@@ -46,15 +52,15 @@ export default class Mainscreen extends React.Component {
     }
     componentDidMount() {
         fetch('http://localhost:3009/patients')
-          .then((response) => response.json())
-          .then((json) => {
-            this.setState({ data: json });
-          })
-          .catch((error) => console.error(error))
-          .finally(() => {
-            this.setState({ isLoading: false });
-          });
-      }
+            .then((response) => response.json())
+            .then((json) => {
+                this.setState({ data: json });
+            })
+            .catch((error) => console.error(error))
+            .finally(() => {
+                this.setState({ isLoading: false });
+            });
+    }
     refreshData() {
         console.log('Refresh Data!');
         const promise = fetch('http://localhost:3009/patients');
@@ -76,8 +82,9 @@ export default class Mainscreen extends React.Component {
     render() {
         const state = this.state;
         const { data, isLoading } = this.state;
+        const { modalVisible } = this.state;
 
-                /* using dummy data for now */
+        /* using dummy data for now */
         const patientsTable = [];
         for (let i = 0; i < data.length; i += 1) {
             const patientRow = [];
@@ -134,14 +141,11 @@ export default class Mainscreen extends React.Component {
                 </View>
                 {/* Buttons view */}
                 <View style={styles.buttonsview}>
-                    <View style={styles.button}>
-                        <Text onPress={this.addPatientRecord} style={styles.buttontext}>Add Patient Record</Text>
+                    <View>
+                        <TextInput style={styles.formfield} placeholder="SEARCH PATIENT BY ID" />
                     </View>
-
                     <View style={styles.buttonsviewsmall}>
-                        <View style={styles.buttonsmall}>
-                            <Text onPress={this.addPatient} style={styles.buttontext}>Add Patient</Text>
-                        </View>
+
                         <View style={styles.buttonsmall}>
                             <Text onPress={this.refreshData} style={styles.buttontext}>Refresh Data</Text>
                         </View>
@@ -149,15 +153,67 @@ export default class Mainscreen extends React.Component {
 
                     <View style={styles.buttonsviewsmall}>
                         <View style={styles.buttonsmall}>
-                            <Text onPress={this.searchPatient} style={styles.buttontext}>Search Patient</Text>
+                            <Modal
+                                animationType="slide"
+                                transparent={true}
+                                visible={modalVisible}
+                            >
+                                <View style={styles.centeredView}>
+                                    <View style={styles.modalView}>
+                                        <Text style={styles.modalText}>Add Patient Information</Text>
+                                        <View>
+                                            <TextInput style={styles.formfield} placeholder="ID" />
+                                        </View>
+                                        <View >
+                                            <TextInput style={styles.formfield} placeholder="Patient Name" />
+                                        </View>
+                                        <View>
+                                            <TextInput style={styles.formfield} placeholder="Age" />
+                                        </View>
+                                        <View >
+                                            <TextInput style={styles.formfield} placeholder="Blood Pressure" />
+                                        </View>
+                                        <View >
+                                            <TextInput style={styles.formfield} placeholder="Respiratory Rate" />
+                                        </View>
+                                        <View >
+                                            <TextInput style={styles.formfield} placeholder="Blood Oxygen Level" />
+                                        </View>
+                                        <View >
+                                            <TextInput style={styles.formfield} placeholder="Heartbeat Rate" />
+                                        </View>
+                                        <TouchableHighlight
+                                            style={styles.modalButton}
+                                            onPress={() => {
+                                                this.setModalVisible(!modalVisible);
+                                            }}
+                                        >
+                                            <Text style={styles.textStyle}>CANCEL</Text>
+                                        </TouchableHighlight>
+                                        <TouchableHighlight
+                                            style={styles.modalButton}
+                                            onPress={() => {
+                                                this.addPatientRecord(!modalVisible);
+                                                this.setModalVisible(!modalVisible);
+                                            }}
+                                        >
+                                            <Text style={styles.textStyle}>ADD PATIENT RECORD</Text>
+
+                                        </TouchableHighlight>
+                                    </View>
+                                </View>
+                            </Modal>
+                            <Text onPress={() => {
+                                this.setModalVisible(true);
+                            }} style={styles.textStyle}>Add Patient</Text>
                         </View>
                         <View style={styles.buttonsmall}>
-                            <Text onPress={this.filterData} style={styles.buttontext}>Filter Data</Text>
+                            <Text onPress={this.filterData} style={styles.buttontext}>Delete Patient</Text>
                         </View>
                     </View>
 
                     <View style={styles.button}>
-                        <Text onPress={this.logOut} style={styles.buttontext}>View Patient Record</Text>
+                        <Text onPress={this.viewPatientRecord} style={styles.buttontext}>View Patient Record</Text>
                     </View>
 
                 </View>
@@ -276,4 +332,53 @@ const styles = StyleSheet.create({
         fontFamily: 'AppleSDGothicNeo-Bold',
         fontSize: 28,
     },
+    formfield: {
+        marginHorizontal: 10,
+        borderWidth: 2,
+        paddingHorizontal: 50,
+        marginTop: 10,
+        borderColor: "#144CA7",
+        borderRadius: 15,
+        paddingVertical: 8,
+        fontFamily: 'Apple SD Gothic Neo',
+        fontSize: 12,
+    },
+
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    modalView: {
+        margin: 5,
+        backgroundColor: "white",
+        borderRadius: 25,
+        padding: 30,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.99,
+        shadowRadius: 3.84,
+    },
+    modalButton: {
+        fontFamily: 'AppleSDGothicNeo-Bold',
+        fontSize: 28,
+        backgroundColor: "#72DAF4",
+        borderRadius: 20,
+        paddingVertical: 10,
+        marginTop: 10,
+    },
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center",
+        fontFamily: 'AppleSDGothicNeo-Bold',
+        fontSize: 18,
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center"
+    }
 });
