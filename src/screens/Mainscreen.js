@@ -12,7 +12,14 @@ export default class Mainscreen extends React.Component {
             dataHeaders: ['ID', 'Patient', 'Age', 'Datetime', 'Blood Pressure', 'Respiratory Rate', 'Blood Oxygen Level', 'Heartbeat rate'],
             headerWidth: [50, 160, 50, 180, 110, 130, 140, 110],
             data: [],
-            isLoading: true
+            isLoading: true,
+            idForm:'',
+            nameForm:'',
+            ageForm:'',
+            bloodpForm:'',
+            respiratoryForm:'',
+            bloodoForm:'',
+            heartForm:'',
         }
     }
 
@@ -25,10 +32,11 @@ export default class Mainscreen extends React.Component {
         console.log('Log Out pressed!');
     }
 
+
     addPatientRecord() {
-        console.log('Add Patient Record!');
-    }
-    addPatient() {
+
+        const {idForm,nameForm,ageForm,bloodpForm,respiratoryForm,bloodoForm,heartForm}  = this.state ;
+
         var date = new Date()
         console.log('Add Patient!');
         fetch('http://localhost:3009/patients', {
@@ -38,14 +46,14 @@ export default class Mainscreen extends React.Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                ID: "104",
-                Name: 'Mr. Pawluk',
-                Age: "38",
+                ID: idForm,
+                Name: nameForm,
+                Age: ageForm,
                 Datetime: date,
-                BloodPressure: '135',
-                RespiratoryRate: '543',
-                BloodOxygen: '234',
-                HeartBeat: '654'
+                BloodPressure: bloodpForm,
+                RespiratoryRate: respiratoryForm,
+                BloodOxygen: bloodoForm,
+                HeartBeat: heartForm
             }),
         });
 
@@ -62,18 +70,18 @@ export default class Mainscreen extends React.Component {
             });
     }
     refreshData() {
-        console.log('Refresh Data!');
-        const promise = fetch('http://localhost:3009/patients');
-        promise.then(response => response.json()).then((responseJson) => {
-            console.log(responseJson[0]);
-            return responseJson
-        }).catch(error => console.log(error))
+        fetch('http://localhost:3009/patients')
+            .then((response) => response.json())
+            .then((json) => {
+                this.setState({ data: json });
+            })
+            .catch((error) => console.error(error))
+            .finally(() => {
+                this.setState({ isLoading: false });
+            });
     }
-    searchPatient() {
-        console.log('Search Patient!');
-    }
-    filterData() {
-        console.log('Filter Data!');
+    deletePatient() {
+        console.log('Delete Patient!');
     }
     viewPatientRecord() {
         console.log('View Patient Record!');
@@ -147,7 +155,7 @@ export default class Mainscreen extends React.Component {
                     <View style={styles.buttonsviewsmall}>
 
                         <View style={styles.buttonsmall}>
-                            <Text onPress={this.refreshData} style={styles.buttontext}>Refresh Data</Text>
+                            <Text onPress={()=>{this.refreshData()}} style={styles.buttontext}>Refresh Data</Text>
                         </View>
                     </View>
 
@@ -162,25 +170,25 @@ export default class Mainscreen extends React.Component {
                                     <View style={styles.modalView}>
                                         <Text style={styles.modalText}>Add Patient Information</Text>
                                         <View>
-                                            <TextInput style={styles.formfield} placeholder="ID" />
+                                            <TextInput style={styles.formfield} placeholder="ID" onChangeText={idForm => this.setState({idForm})}/>
                                         </View>
                                         <View >
-                                            <TextInput style={styles.formfield} placeholder="Patient Name" />
+                                            <TextInput style={styles.formfield} placeholder="Patient Name" onChangeText={nameForm => this.setState({nameForm})}/>
                                         </View>
                                         <View>
-                                            <TextInput style={styles.formfield} placeholder="Age" />
+                                            <TextInput style={styles.formfield} placeholder="Age" onChangeText={ageForm => this.setState({ageForm})}/>
                                         </View>
                                         <View >
-                                            <TextInput style={styles.formfield} placeholder="Blood Pressure" />
+                                            <TextInput style={styles.formfield} placeholder="Blood Pressure" onChangeText={bloodpForm => this.setState({bloodpForm})}/>
                                         </View>
                                         <View >
-                                            <TextInput style={styles.formfield} placeholder="Respiratory Rate" />
+                                            <TextInput style={styles.formfield} placeholder="Respiratory Rate" onChangeText={respiratoryForm => this.setState({respiratoryForm})}/>
                                         </View>
                                         <View >
-                                            <TextInput style={styles.formfield} placeholder="Blood Oxygen Level" />
+                                            <TextInput style={styles.formfield} placeholder="Blood Oxygen Level" onChangeText={bloodoForm => this.setState({bloodoForm})}/>
                                         </View>
                                         <View >
-                                            <TextInput style={styles.formfield} placeholder="Heartbeat Rate" />
+                                            <TextInput style={styles.formfield} placeholder="Heartbeat Rate" onChangeText={heartForm => this.setState({heartForm})}/>
                                         </View>
                                         <TouchableHighlight
                                             style={styles.modalButton}
@@ -208,7 +216,7 @@ export default class Mainscreen extends React.Component {
                             }} style={styles.textStyle}>Add Patient</Text>
                         </View>
                         <View style={styles.buttonsmall}>
-                            <Text onPress={this.filterData} style={styles.buttontext}>Delete Patient</Text>
+                            <Text onPress={this.deletePatient} style={styles.buttontext}>Delete Patient</Text>
                         </View>
                     </View>
 
