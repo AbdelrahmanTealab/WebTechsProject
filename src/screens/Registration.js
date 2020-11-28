@@ -27,7 +27,7 @@ export default class Registration extends React.Component {
                             <TextInput style={styles.formfield} placeholder="Email" />
                         </View>
                         <View >
-                            <TextInput style={styles.formfield} placeholder="Password" />
+                            <TextInput style={styles.formfield} placeholder="Password" secureTextEntry={true} password={true} autoCorrect={false}/>
                         </View>
                         <View >
                             <TextInput style={styles.formfield} placeholder="Facility" />
