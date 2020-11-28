@@ -20,6 +20,7 @@ export default class Mainscreen extends React.Component {
             respiratoryForm:'',
             bloodoForm:'',
             heartForm:'',
+            TextInputValue: '',
         }
     }
 
@@ -39,7 +40,7 @@ export default class Mainscreen extends React.Component {
 
         var date = new Date()
         console.log('Add Patient!');
-        fetch('http://localhost:3009/patients', {
+        fetch('https://sem1-project-nodejs.herokuapp.com/patients', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -59,7 +60,7 @@ export default class Mainscreen extends React.Component {
 
     }
     componentDidMount() {
-        fetch('http://localhost:3009/patients')
+        fetch('https://sem1-project-nodejs.herokuapp.com/patients')
             .then((response) => response.json())
             .then((json) => {
                 this.setState({ data: json });
@@ -70,7 +71,7 @@ export default class Mainscreen extends React.Component {
             });
     }
     refreshData() {
-        fetch('http://localhost:3009/patients')
+        fetch('https://sem1-project-nodejs.herokuapp.com/patients')
             .then((response) => response.json())
             .then((json) => {
                 this.setState({ data: json });
@@ -80,15 +81,42 @@ export default class Mainscreen extends React.Component {
                 this.setState({ isLoading: false });
             });
     }
-    deletePatient() {
+    deletePatient = () =>{
+        const { TextInputValue }  = this.state ;
+        const url = 'https://sem1-project-nodejs.herokuapp.com/patients/'+TextInputValue 
+        fetch(url, {
+            method: 'delete'
+          }).then(response =>
+            response.json().then(json => {
+              return json;
+            })
+          ) .catch((error) => console.error(error))
+            .finally(() => {
+                this.setState({ isLoading: false });
+            });
+
+        Alert.alert("Deleted Patient number "+TextInputValue);
         console.log('Delete Patient!');
     }
-    viewPatientRecord() {
+    viewPatientRecord = () =>{
+        
+        const { TextInputValue, data }  = this.state ;
+        const url = 'https://sem1-project-nodejs.herokuapp.com/patients/'+TextInputValue 
+        fetch(url)
+            .then((response) => response.json())
+            .then((json) => {
+                this.setState({ data: json });
+            })
+            .catch((error) => console.error(error))
+            .finally(() => {
+                this.setState({ isLoading: false });
+            });
         console.log('View Patient Record!');
     }
 
     render() {
         const state = this.state;
+        const searchID = ""
         const { data, isLoading } = this.state;
         const { modalVisible } = this.state;
 
@@ -150,7 +178,7 @@ export default class Mainscreen extends React.Component {
                 {/* Buttons view */}
                 <View style={styles.buttonsview}>
                     <View>
-                        <TextInput style={styles.formfield} placeholder="SEARCH PATIENT BY ID" />
+                        <TextInput style={styles.formfield} placeholder="SEARCH PATIENT BY ID" onChangeText={TextInputValue => this.setState({TextInputValue})}/>
                     </View>
                     <View style={styles.buttonsviewsmall}>
 
