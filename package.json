@@ -8,17 +8,6 @@
     "web": "expo start --web",
     "eject": "expo eject"
   },
-  "jest": {
-    "preset": "react-native",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "transformIgnorePatterns": [
-			"node_modules/?!(react-native|native-base|expo-status-bar)"
-    ]
-  },
   "dependencies": {
     "@react-native-community/masked-view": "0.1.10",
     "expo": "~39.0.2",
