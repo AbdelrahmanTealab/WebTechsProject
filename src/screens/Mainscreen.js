@@ -119,7 +119,6 @@ export default class Mainscreen extends React.Component {
         const searchID = ""
         const { data, isLoading } = this.state;
         const { modalVisible } = this.state;
-
         /* using dummy data for now */
         const patientsTable = [];
         for (let i = 0; i < data.length; i += 1) {
@@ -136,6 +135,9 @@ export default class Mainscreen extends React.Component {
         }
         const { navigate } = this.props.navigation
         return (
+            <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{ flex: 1 }}>
             <View>
                 <StatusBar barStyle="dark-content" />
                 <Text style={styles.logout} onPress={this.logOut}>Log Out</Text>
@@ -192,7 +194,7 @@ export default class Mainscreen extends React.Component {
                             <Modal
                                 animationType="slide"
                                 transparent={true}
-                                visible={modalVisible}
+                                visible={!modalVisible}
                             >
                                 <View style={styles.centeredView}>
                                     <View style={styles.modalView}>
@@ -254,6 +256,7 @@ export default class Mainscreen extends React.Component {
 
                 </View>
             </View>
+            </KeyboardAvoidingView>
 
         )
     }
@@ -349,6 +352,7 @@ const styles = StyleSheet.create({
     },
     buttonsview: {
         margin: 'auto',
+        justifyContent: 'flex-end',
         alignSelf: 'center',
         width: "92.5%",
         flexDirection: 'column',
@@ -359,6 +363,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         alignContent: 'center',
         alignItems: 'center',
+        justifyContent: 'flex-end',
         margin: 'auto',
         marginTop: '2%',
         marginBottom: '2%',
@@ -370,6 +375,7 @@ const styles = StyleSheet.create({
     },
     formfield: {
         marginHorizontal: 10,
+        justifyContent: 'flex-end',
         borderWidth: 2,
         paddingHorizontal: 50,
         marginTop: 10,
@@ -388,6 +394,7 @@ const styles = StyleSheet.create({
     modalView: {
         margin: 5,
         backgroundColor: "white",
+        justifyContent: 'flex-end',
         borderRadius: 25,
         padding: 30,
         shadowColor: "#000",
@@ -412,9 +419,11 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontFamily: 'AppleSDGothicNeo-Bold',
         fontSize: 18,
+        justifyContent: 'flex-end',
     },
     modalText: {
         marginBottom: 15,
+        justifyContent: 'flex-end',
         textAlign: "center"
     }
 });

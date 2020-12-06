@@ -8,7 +8,7 @@ export default class Registration extends React.Component {
             <KeyboardAvoidingView
                 behavior={Platform.OS == "ios" ? "padding" : "height"}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                    <View>
+                    <View style={{justifyContent: 'flex-end'}}>
                     <StatusBar barStyle="dark-content"/>
                         <Image source={require('../images/logo.png')}
                             style={styles.logo} />
@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
     formfield: {
+        justifyContent: "flex-end",
         alignItems: "center",
         flexDirection: "row",
         marginHorizontal: 60,

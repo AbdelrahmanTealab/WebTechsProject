@@ -6,9 +6,10 @@ export default class Registration extends React.Component {
         const { navigate } = this.props.navigation
         return (
             <KeyboardAvoidingView
-                behavior={Platform.OS == "ios" ? "padding" : "height"}>
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{ flex: 1 }}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                    <View>
+                    <View style={{justifyContent: 'flex-end'}}>
                     <StatusBar barStyle="dark-content"/>
                         <Image source={require('../images/logo.png')}
                             style={styles.logo} />
@@ -88,6 +89,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
     formfield: {
+        justifyContent: "flex-end",
         alignItems: "center",
         flexDirection: "row",
         marginHorizontal: 60,
